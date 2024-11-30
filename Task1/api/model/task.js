@@ -1,7 +1,7 @@
-// models/task.js
+// src/models/task.js
 
 const { DataTypes } = require('sequelize');
-const sequelize = require('../db');
+const sequelize = require('../db/db');
 
 const Task = sequelize.define('Task', {
   title: {
@@ -10,10 +10,15 @@ const Task = sequelize.define('Task', {
   },
   description: {
     type: DataTypes.STRING,
+    allowNull: true,
   },
-  completed: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false,
+  createdAt: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
   },
 });
 

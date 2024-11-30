@@ -1,8 +1,11 @@
 // routes/taskRoutes.js
 
 const express = require('express');
-const Task = require('../models/task');
-const { addTask, getData, updateTask, deleteTask } = require('../controller/taskController');
+const Task = require('../model/task');
+const {addTask}= require('../controller/taskController');
+const {getData} = require('../controller/taskController');
+const {updateTask} = require('../controller/taskController');
+const {deleteTask} = require('../controller/taskController');
 
 const router = express.Router();
 

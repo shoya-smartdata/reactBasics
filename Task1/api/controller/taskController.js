@@ -1,6 +1,6 @@
 const Task = require('../model/task')
 
-export const  addTask = async(req, res)=>{
+ exports.addTask = async(req, res)=>{
      
         try {
           const task = await Task.create(req.body);
@@ -13,7 +13,7 @@ export const  addTask = async(req, res)=>{
 
 // get 
 
-export const getData = async (req, res )=>{
+ exports.getData = async (req, res )=>{
    
         try {
           const tasks = await Task.findAll();
@@ -26,7 +26,7 @@ export const getData = async (req, res )=>{
 
 // update 
 
-export const updateTask = async (req, res) => {
+exports.updateTask = async (req, res) => {
     try {
       const task = await Task.findByPk(req.params.id);
       if (task) {
@@ -44,7 +44,7 @@ export const updateTask = async (req, res) => {
   // update 
 
 
-  export const deleteTask = async (req, res) => {
+exports.deleteTask = async (req, res) => {
     try {
       const task = await Task.findByPk(req.params.id);
       if (task) {
@@ -57,3 +57,4 @@ export const updateTask = async (req, res) => {
       res.status(500).json({ error: 'Failed to delete task' });
     }
   }
+

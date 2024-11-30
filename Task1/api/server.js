@@ -3,7 +3,7 @@
 const express = require('express');
 const cors = require('cors');
 const router = require('./routes/route');
-const sequelize = require('./db');
+const sequelize = require('./db/db.js');
 
 const app = express();
 app.use(cors());
