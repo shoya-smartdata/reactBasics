@@ -1,11 +1,11 @@
-// src/redux/reducer.js
+
 
 import { SET_TASKS, ADD_TASK, DELETE_TASK, UPDATE_TASK } from './action';
 
 const initialState = {
   tasks: [],
 };
-
+ 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_TASKS:

@@ -1,12 +1,12 @@
-// src/redux/store.js
 
-import { createStore, applyMiddleware } from 'redux';
+
+import { createStore } from 'redux';
 import reducer from './reducer';
 
-// Create Redux store without thunk or devtools
+
 const store = createStore(
   reducer, 
-  applyMiddleware() // No middleware
+   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
 
 export default store;

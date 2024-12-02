@@ -2,21 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setTasks, addTask, deleteTask, updateTask } from './redux/action';
 import axios from 'axios';
-import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'; // Filter Icon
+import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 
 const App = () => {
   const dispatch = useDispatch();
   const tasks = useSelector((state) => state.tasks);
 
-  // State for task input fields
   const [newTask, setNewTask] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
   const [editTaskState, setEditTaskState] = useState(null);
-
-  // State for the search input
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Fetch tasks on initial load
   useEffect(() => {
     axios
       .get('http://localhost:5000/api/tasks')
@@ -28,7 +24,6 @@ const App = () => {
       });
   }, [dispatch]);
 
-  // Handle task submission
   const handleSubmit = () => {
     if (newTask.trim() && taskDescription.trim()) {
       const task = { title: newTask, description: taskDescription };
@@ -45,7 +40,6 @@ const App = () => {
     }
   };
 
-  // Handle task deletion
   const handleDelete = (id) => {
     axios
       .delete(`http://localhost:5000/api/tasks/${id}`)
@@ -57,14 +51,12 @@ const App = () => {
       });
   };
 
-  // Handle task edit
   const handleEdit = (task) => {
     setEditTaskState(task);
     setNewTask(task.title);
     setTaskDescription(task.description);
   };
 
-  // Handle task update
   const handleUpdate = () => {
     if (newTask.trim() && taskDescription.trim() && editTaskState) {
       const updatedTask = { ...editTaskState, title: newTask, description: taskDescription };
@@ -82,64 +74,58 @@ const App = () => {
     }
   };
 
-  // Filter tasks based on the search query
   const filteredTasks = tasks.filter((task) =>
     task.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-indigo-600 to-blue-500 p-6">
-      <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-xl p-8">
-        <h1 className="text-4xl font-bold text-center text-gray-800 mb-6">Task Manager</h1>
+    <div className="min-h-screen bg-gradient-to-r from-purple-500 to-indigo-500 p-8">
+      <div className="max-w-3xl mx-auto bg-white rounded-3xl shadow-2xl p-10">
+        <h1 className="text-5xl font-extrabold text-center text-gray-800 mb-8">Task Manager</h1>
 
-        {/* Search box */}
-        <div className="relative">
+        <div className="relative mb-8">
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-4 py-3 pl-10 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-md"
+            className="w-full px-5 py-3 pl-12 border border-gray-300 rounded-full focus:outline-none focus:ring-4 focus:ring-indigo-500 shadow-md"
             placeholder="Search tasks by title"
           />
-          <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-600" />
+          <MagnifyingGlassIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 w-6 h-6 text-gray-600" />
         </div>
 
-        {/* Task input fields */}
-        <div className="mt-8">
+        <div className="mb-10">
           <input
             type="text"
             value={newTask}
             onChange={(e) => setNewTask(e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-md"
+            className="w-full px-5 py-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-4 focus:ring-indigo-500 shadow-md"
             placeholder="Enter task title"
           />
           <textarea
             value={taskDescription}
             onChange={(e) => setTaskDescription(e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-md"
+            className="w-full px-5 py-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-4 focus:ring-indigo-500 shadow-md"
             placeholder="Enter task description"
             rows="4"
           />
           <button
             onClick={editTaskState ? handleUpdate : handleSubmit}
-            className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-200 ease-in-out"
+            className="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition duration-200 ease-in-out"
           >
             {editTaskState ? 'Update Task' : 'Add Task'}
           </button>
         </div>
 
-        {/* Task list */}
-        <ul className="mt-8 space-y-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {filteredTasks.map((task) => (
-            <li
+            <div
               key={task.id}
-              className="flex justify-between items-center bg-gray-50 p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-200 ease-in-out"
+              className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-2xl transition duration-300 ease-in-out"
             >
-              <div className="space-y-2">
-                <p className="text-xl font-semibold text-gray-800">{task.title}</p>
-                <p className="text-gray-600">{task.description}</p>
-              </div>
-              <div className="flex space-x-4">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-2">{task.title}</h2>
+              <p className="text-gray-600 mb-4">{task.description}</p>
+              <div className="flex justify-end space-x-3">
                 <button
                   onClick={() => handleEdit(task)}
                   className="bg-yellow-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-yellow-600 transition duration-200 ease-in-out"
@@ -153,9 +139,9 @@ const App = () => {
                   Delete
                 </button>
               </div>
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       </div>
     </div>
   );

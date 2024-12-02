@@ -1,33 +1,45 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, Component } from 'react';
 
 export const CalculatorContext = createContext();
 
-export const CalculatorProvider = ({ children }) => {
-  const [display, setDisplay] = useState('');
-  const [currentValue, setCurrentValue] = useState('');
-  const [previousValue, setPreviousValue] = useState(null);
-  const [operation, setOperation] = useState(null);
-  const [result, setResult] = useState(null);
+export class CalculatorProvider extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      display: '',
+      currentValue: '',
+      previousValue: null,
+      operation: null,
+      result: null,
+    };
+  }
 
-  const addDigit = (digit) => {
-    if (result !== null) {
-      clearAll(); // Start fresh after a result
+  addDigit = (digit) => {
+    if (this.state.result !== null) {
+      this.clearAll();
     }
-    setCurrentValue((prev) => prev + digit);
-    setDisplay((prev) => prev + digit);
+    this.setState((prevState) => ({
+      currentValue: prevState.currentValue + digit,
+      display: prevState.currentValue + digit,
+    }));
   };
 
-  const chooseOperation = (op) => {
-    if (currentValue === '') return;
-    if (operation) calculate();
-
-    setOperation(op);
-    setPreviousValue(currentValue);
-    setCurrentValue('');
-    setDisplay(`${currentValue} ${op} `);
+  chooseOperation = (op) => {
+    if (this.state.currentValue === '') return;
+    if (this.state.operation) {
+      this.calculate();
+    }
+    this.setState((prevState) => ({
+      operation: op,
+      previousValue: prevState.currentValue,
+      currentValue: '',
+      display: '', // Clear display for next input
+    }));
   };
 
-  const calculate = () => {
+  calculate = () => {
+    const { previousValue, currentValue, operation } = this.state;
+
     if (!previousValue || !currentValue) return;
 
     const prev = parseFloat(previousValue);
@@ -51,32 +63,38 @@ export const CalculatorProvider = ({ children }) => {
         return;
     }
 
-    setResult(result);
-    setDisplay(`${previousValue} ${operation} ${currentValue} = ${result}`);
-    setCurrentValue(result.toString());
-    setPreviousValue(null);
-    setOperation(null);
+    this.setState({
+      result: result,
+      display: result.toString(), // Update display with only the result
+      currentValue: result.toString(),
+      previousValue: null,
+      operation: null,
+    });
   };
 
-  const clearAll = () => {
-    setDisplay('');
-    setCurrentValue('');
-    setPreviousValue(null);
-    setOperation(null);
-    setResult(null);
+  clearAll = () => {
+    this.setState({
+      display: '',
+      currentValue: '',
+      previousValue: null,
+      operation: null,
+      result: null,
+    });
   };
 
-  return (
-    <CalculatorContext.Provider
-      value={{
-        display,
-        addDigit,
-        chooseOperation,
-        calculate,
-        clearAll,
-      }}
-    >
-      {children}
-    </CalculatorContext.Provider>
-  );
-};
+  render() {
+    return (
+      <CalculatorContext.Provider
+        value={{
+          display: this.state.display,
+          addDigit: this.addDigit,
+          chooseOperation: this.chooseOperation,
+          calculate: this.calculate,
+          clearAll: this.clearAll,
+        }}
+      >
+        {this.props.children}
+      </CalculatorContext.Provider>
+    );
+  }
+}
